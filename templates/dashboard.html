@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Dashboard</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #222327; /* Matched to dark theme */
+        padding: 50px;
+        text-align: center;
+        color: #e0e0e0;
+      }
+      .dashboard-box {
+        background-color: #2a2c31; /* Matched to login box */
+        padding: 40px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        display: inline-block;
+        border: 1px solid #3c4043;
+      }
+      .logo {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+      }
+      h1 {
+        color: #8ab4f8; /* Matched to heading accent */
+        margin-top: 0;
+      }
+      p {
+        color: #bdc1c6;
+      }
+      a {
+        color: #8ab4f8;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-box">
+      <img
+        src="{{ url_for('static', filename='logo.png') }}"
+        alt="IIT Dhokalpur Logo"
+        class="logo"
+      />
+      <h1>Welcome, {{ username }}!</h1>
+      <p>No new academic notices at this time.</p>
+      <p>
+        <em
+          >(Administrator Note: Grading system is currently under
+          maintenance).</em
+        >
+      </p>
+      <br />
+      <a href="/">Log Out</a>
+    </div>
+  </body>
+</html>
