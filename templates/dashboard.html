@@ -2,64 +2,185 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard - IIT Dholakpur</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
       body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background-color: #222327; /* Matched to dark theme */
-        padding: 50px;
-        text-align: center;
+        font-family: "Inter", sans-serif;
+        background-color: #222327;
         color: #e0e0e0;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
       }
-      .dashboard-box {
-        background-color: #2a2c31; /* Matched to login box */
-        padding: 40px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-        display: inline-block;
-        border: 1px solid #3c4043;
-      }
-      .logo {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        object-fit: cover;
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 90%;
+        max-width: 1300px;
+        padding: 30px 0;
         margin-bottom: 20px;
       }
-      h1 {
-        color: #8ab4f8; /* Matched to heading accent */
-        margin-top: 0;
-      }
-      p {
-        color: #bdc1c6;
-      }
-      a {
-        color: #8ab4f8;
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 20px;
         text-decoration: none;
-        font-weight: 500;
+        color: inherit;
       }
-      a:hover {
+      .logo {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+      .institute-name {
+        color: #8ab4f8;
+        font-size: 22px;
+        font-weight: 600;
+        margin: 0;
+      }
+      .header-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      .system-name {
+        color: #8ab4f8;
+        font-size: 22px;
+        font-weight: 600;
+        margin: 0;
+      }
+      .header-link {
+        color: #f28b82;
+        text-decoration: none;
+        font-size: 14px;
+        margin-top: 8px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .header-link:hover {
         text-decoration: underline;
+      }
+      .dashboard-container {
+        width: 90%;
+        max-width: 800px;
+        background-color: #2a2c31;
+        padding: 50px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        border: 1px solid #3c4043;
+        margin-top: 20px;
+      }
+      h1 {
+        color: #8ab4f8;
+        margin-top: 0;
+        margin-bottom: 30px;
+      }
+      .admin-panel {
+        margin-top: 40px;
+        border-top: 1px solid #5f6368;
+        padding-top: 30px;
+        text-align: left;
+      }
+      .admin-panel h2 {
+        color: #f28b82;
+        margin-bottom: 20px;
+      }
+      .message-card {
+        background-color: #1e1f22;
+        border: 1px solid #5f6368;
+        padding: 15px;
+        border-radius: 4px;
+        margin-bottom: 15px;
+        color: #e8eaed;
+      }
+      .ticket-id {
+        font-size: 12px;
+        color: #9aa0a6;
+        margin-bottom: 8px;
+        display: block;
+      }
+      .delete-btn {
+        background-color: #8b2929;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: background-color 0.2s;
+      }
+      .delete-btn:hover {
+        background-color: #6b1e1e;
+      }
+      .student-panel {
+        color: #bdc1c6;
+        text-align: left;
       }
     </style>
   </head>
   <body>
-    <div class="dashboard-box">
-      <img
-        src="{{ url_for('static', filename='logo.png') }}"
-        alt="IIT Dholakpur Logo"
-        class="logo"
-      />
+    <div class="header">
+      <a href="/" class="header-left">
+        <img
+          src="{{ url_for('static', filename='logo.png') }}"
+          alt="IIT Dholakpur Logo"
+          class="logo"
+        />
+        <h1 class="institute-name">Indian Institute of Technology Dholakpur</h1>
+      </a>
+      <div class="header-right">
+        <h2 class="system-name">Academic Information System</h2>
+        <a href="/logout" class="header-link">Log Out</a>
+      </div>
+    </div>
+
+    <div class="dashboard-container">
       <h1>Welcome, {{ username }}!</h1>
-      <p>No new academic notices at this time.</p>
-      <p>
-        <em
-          >(Administrator Note: Grading system is currently under
-          maintenance).</em
-        >
-      </p>
-      <br />
-      <a href="/">Log Out</a>
+
+      {% if username.lower() == 'admin' %}
+      <div class="admin-panel">
+        <h2>Admin Control Panel - Tech Support Tickets</h2>
+
+        {% if messages %} {% for msg in messages %}
+        <div class="message-card">
+          <span class="ticket-id">Ticket #{{ msg.id }}</span>
+          <div>{{ msg.content | safe }}</div>
+
+          <form
+            action="{{ url_for('delete_ticket', ticket_id=msg.id) }}"
+            method="POST"
+          >
+            <button type="submit" class="delete-btn">Delete Ticket</button>
+          </form>
+        </div>
+        {% endfor %} {% else %}
+        <p>No support tickets at this time.</p>
+        {% endif %}
+      </div>
+
+      {% else %}
+      <div class="student-panel">
+        <h3>Student Portal Overview</h3>
+        <p>No new academic notices at this time.</p>
+        <p>
+          <em
+            >(Administrator Note: Grading system is currently under
+            maintenance).</em
+          >
+        </p>
+      </div>
+      {% endif %}
     </div>
   </body>
 </html>
